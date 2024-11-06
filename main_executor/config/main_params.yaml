@@ -1,0 +1,36 @@
+launch: #起動パラメータ
+  ros__parameters:
+    joy: true
+
+/**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
+  ros__parameters:
+    # 並進  速度[m/s],加速度[m/s^2],加減速度[-m/s^2],躍度[m/s^3]
+    linear_max:
+      vel : 0.5
+      acc: 1.0
+      dec: 1.0
+    # 回転  速度[deg/s],加速度[deg/s^2],加減速度[-deg/s^2],躍度[deg/s^3]
+    angular_max :
+      vel: 30.0
+      acc: 60.0
+      dec: 60.0
+    autonomous_flag : false
+
+cybergear:
+  socketcan_interface_node:
+    ros__parameters:
+      if_name : "0"
+
+cybergear_interface_node:
+  ros__parameters:
+    interval_ms : 10
+    master_id : 0x00
+    target_id : 0x7F
+
+    gear_rate : 1.0
+    reverse_flag : false
+    # 制御対象の最小・最大位置[deg]
+    pos_limit_min : -30.0
+    pos_limit_max : 30.0
+    # 制御対象の最大速度[deg/s] <-サイバーギアの限界速度以下に設定する
+    limit_speed : 60.0
