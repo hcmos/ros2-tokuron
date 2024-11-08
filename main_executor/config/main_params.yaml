@@ -1,6 +1,6 @@
 launch: #起動パラメータ
   ros__parameters:
-    joy: true
+    joy: false
 
 /**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
   ros__parameters:
@@ -16,10 +16,18 @@ launch: #起動パラメータ
       dec: 60.0
     autonomous_flag : false
 
+chassis_driver_node:
+  ros__parameters:
+    wheel_radius : 0.01
+    attached_direction : 0.2
+
+socketcan_interface_node:
+  ros__parameters:
+    if_name : "0"
 cybergear:
   socketcan_interface_node:
     ros__parameters:
-      if_name : "0"
+      if_name : "_candleLight"
 
 cybergear_interface_node:
   ros__parameters:

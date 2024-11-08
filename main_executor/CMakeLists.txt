@@ -8,6 +8,7 @@ endif()
 # find dependencies
 find_package(rclcpp REQUIRED)
 find_package(controller REQUIRED)
+find_package(chassis_driver REQUIRED)
 find_package(socketcan_interface REQUIRED)
 find_package(cybergear_interface REQUIRED)
 
@@ -20,6 +21,7 @@ add_executable(main_exec
 ament_target_dependencies(main_exec
         rclcpp
         controller
+        chassis_driver
         socketcan_interface
         cybergear_interface
         )
