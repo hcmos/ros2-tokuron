@@ -2,6 +2,7 @@
 
 #include <cstdint>
 
+namespace utils{
 /*INT*/
 union Int_bytes {
     int int_value;
@@ -80,4 +81,5 @@ inline void float_to_bytes(uint8_t *value,float float_value) {
     value[1]=tmp.bytes[1];
     value[2]=tmp.bytes[2];
     value[3]=tmp.bytes[3];
+}
 }
