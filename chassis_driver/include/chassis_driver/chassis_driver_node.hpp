@@ -28,6 +28,8 @@ private:
 
     void rotate_vector(const double vx, const double vy, const double theta);
     void send_motorvel(const int motor_num, const double vel);
+    void send_motor_rev(const int motor_num, const bool rev);
+    void send_encoder_rev(const int motor_num, const bool rev);
 
     rclcpp::Publisher<socketcan_interface_msg::msg::SocketcanIF>::SharedPtr publisher_can;
 
@@ -38,7 +40,12 @@ private:
     const double attached_direction;
     const double linear_max_vel;
     const double angular_max_vel;
-    const double cos45;
+    const double sqrt2over2;
+    const uint32_t stop_canid;
+    const uint32_t restart_canid;
+    const uint32_t motor_rev_canid;
+    const uint32_t encoder_rev_canid;
+    const uint32_t velocity_canid;
 
     // 変数
     geometry_msgs::msg::Twist prime_vel;

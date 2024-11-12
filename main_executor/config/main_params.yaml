@@ -1,6 +1,6 @@
 launch: #起動パラメータ
   ros__parameters:
-    joy: false
+    joy: true
 
 /**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
   ros__parameters:
@@ -18,8 +18,16 @@ launch: #起動パラメータ
 
 chassis_driver_node:
   ros__parameters:
-    wheel_radius : 0.01
-    attached_direction : 0.2
+    wheel_radius : 0.03
+    attached_direction : 0.2828
+    stop_canid : 0x100
+    restart_canid : 0x101
+    motor_rev_canid : 0x102
+    encoder_rev_canid : 0x103
+    velocity_canid : 0x108
+
+    motor_rev: [0, 1, 0, 0]
+    encoder_rev: [0, 0, 0, 0]
 
 socketcan_interface_node:
   ros__parameters:
