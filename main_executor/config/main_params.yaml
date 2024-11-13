@@ -46,7 +46,7 @@ cybergear_interface_node:
     gear_rate : 1.0
     reverse_flag : false
     # 制御対象の最小・最大位置[deg]
-    pos_limit_min : -30.0
-    pos_limit_max : 30.0
+    pos_limit_min : -90.0
+    pos_limit_max : 90.0
     # 制御対象の最大速度[deg/s] <-サイバーギアの限界速度以下に設定する
-    limit_speed : 60.0
+    limit_speed : 697.5 # 減速比 7.75:1

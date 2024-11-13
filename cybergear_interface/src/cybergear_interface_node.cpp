@@ -11,7 +11,7 @@ CybergearInterface::CybergearInterface(const rclcpp::NodeOptions& options) : Cyb
 CybergearInterface::CybergearInterface(const std::string& name_space, const rclcpp::NodeOptions& options)
 : rclcpp::Node("cybergear_interface_node", name_space, options),
 driver(get_parameter("master_id").as_int(), get_parameter("target_id").as_int(),
-    this->create_publisher<socketcan_interface_msg::msg::SocketcanIF>("cybergear/can_tx", _qos)),
+    this->create_publisher<socketcan_interface_msg::msg::SocketcanIF>("can_tx", _qos)),
 interval_ms(get_parameter("interval_ms").as_int()),
 gear_rate(get_parameter("gear_rate").as_double()),
 is_reversed(get_parameter("reverse_flag").as_bool()),
@@ -21,12 +21,12 @@ pos_limit_max(dtor(get_parameter("pos_limit_max").as_double()) * gear_rate),
 limit_speed(dtor(get_parameter("limit_speed").as_double()))
 {
     _subscription_pos = this->create_subscription<std_msgs::msg::Float64>(
-        "cybergear/pos",
+        "motor/pos",
         _qos,
         std::bind(&CybergearInterface::_subscriber_callback_pos, this, std::placeholders::_1)
     );
     _subscription_reset = this->create_subscription<std_msgs::msg::Empty>(
-        "cybergear/reset",
+        "motor/reset",
         _qos,
         std::bind(&CybergearInterface::_subscriber_callback_reset, this, std::placeholders::_1)
     );
