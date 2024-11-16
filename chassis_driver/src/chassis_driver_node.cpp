@@ -139,10 +139,28 @@ void ChassisDriver::send_encoder_rev(const int motor_num, const bool rev){
 
 void ChassisDriver::_subscriber_callback_stop(const std_msgs::msg::Empty::SharedPtr msg){
     mode = Mode::stop;
+    // 出版
+    for(int motor_num=0; motor_num<4; motor_num++){
+        auto msg_can = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+        msg_can->canid = stop_canid; // ベースID
+        msg_can->canid = (msg_can->canid & 0xF0F) | (motor_num << 4);   // モータ番号によって変更
+        msg_can->candlc = 0;
+        publisher_can->publish(*msg_can);
+    }
+
     RCLCPP_INFO(this->get_logger(), "停止");
 }
 void ChassisDriver::_subscriber_callback_restart(const std_msgs::msg::Empty::SharedPtr msg){
     mode = Mode::stay;
+    // 出版
+    for(int motor_num=0; motor_num<4; motor_num++){
+        auto msg_can = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+        msg_can->canid = restart_canid; // ベースID
+        msg_can->canid = (msg_can->canid & 0xF0F) | (motor_num << 4);   // モータ番号によって変更
+        msg_can->candlc = 0;
+        publisher_can->publish(*msg_can);
+    }
+
     RCLCPP_INFO(this->get_logger(), "再稼働");
 }
 
