@@ -9,11 +9,10 @@ import time
 
 class OdometryPublisher(Node):
     def __init__(self):
-        super().__init__('odometry_publisher')
+        super().__init__('tracking_odometry_node')
 
         self.publisher_ = self.create_publisher(Odometry, 'odom', 10)
-        self.timer = self.create_timer(0.1, self.timer_callback)  # 0.1秒間隔 (10Hz)
-
+        self.timer = self.create_timer(0.01, self.timer_callback)   # 100Hz
 
         # qwiicの較正
         print("\nQwiic OTOS Example 2 - Set Units\n")
@@ -40,20 +39,18 @@ class OdometryPublisher(Node):
         self.myOtos.resetTracking()
 
     def timer_callback(self):
-        current_time = self.get_clock().now().to_msg()
-
         odom = Odometry()
-        odom.header.stamp = current_time
-        odom.header.frame_id = 'odom'  # 親フレームID
-        odom.child_frame_id = 'base_link'  # 子フレームID
+        odom.header.stamp = self.get_clock().now().to_msg()
+        odom.header.frame_id = 'odom'
+        odom.child_frame_id = 'base_link'
 
-        myPosition = self.myOtos.getPosition()
+        current = self.myOtos.getPosition()
 
-        odom.pose.pose.position.x = myPosition.x
-        odom.pose.pose.position.y = myPosition.y
+        odom.pose.pose.position.x = current.x
+        odom.pose.pose.position.y = current.y
         odom.pose.pose.position.z = 0.0
 
-        odom.pose.pose.orientation  = self.yaw_to_quaternion(myPosition.h)
+        odom.pose.pose.orientation  = self.yaw_to_quaternion(current.h)
 
         # 出版
         self.publisher_.publish(odom)
