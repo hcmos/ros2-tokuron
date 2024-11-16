@@ -11,7 +11,7 @@ find_package(controller REQUIRED)
 find_package(chassis_driver REQUIRED)
 find_package(socketcan_interface REQUIRED)
 find_package(cybergear_interface REQUIRED)
-
+find_package(landmark_localization REQUIRED)
 include_directories(/usr/include/eigen3)
 
 add_executable(main_exec
@@ -24,6 +24,7 @@ ament_target_dependencies(main_exec
         chassis_driver
         socketcan_interface
         cybergear_interface
+        landmark_localization
         )
 
 target_include_directories(main_exec
