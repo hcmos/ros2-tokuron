@@ -21,11 +21,11 @@ int main(int argc, char * argv[]){
     auto cybergear_interface_node = std::make_shared<cybergear_interface::CybergearInterface>(nodes_option);
     auto landmark_localization_node = std::make_shared<landmark_localization::LandmarkLocalization>(nodes_option);
 
-    exec.add_node(socketcan_node);
-    // exec.add_node(socketcan_cybergear_node);
-    exec.add_node(controller_node);
-    exec.add_node(chassis_driver_node);
-    exec.add_node(cybergear_interface_node);
+    // exec.add_node(socketcan_node);
+    // // exec.add_node(socketcan_cybergear_node);
+    // exec.add_node(controller_node);
+    // exec.add_node(chassis_driver_node);
+    // exec.add_node(cybergear_interface_node);
     exec.add_node(landmark_localization_node);
 
     exec.spin();

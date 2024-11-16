@@ -77,3 +77,5 @@ landmark_localization:
     odom_weight_angler: 1.0e-2
     plane_iterations: 100
     line_iterations: 100
+    odom2laser_x: 1.0
+    odom2laser_y: 1.0
