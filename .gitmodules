@@ -1,6 +1,6 @@
 [submodule "landmark_localization"]
 	path = landmark_localization
-	url = git@github.com:RyoFunai/landmark_localization.git
+	url = https://github.com/RyoFunai/landmark_localization.git
 [submodule "pointcloud_processor"]
 	path = pointcloud_processor
-	url = git@github.com:RyoFunai/pointcloud_processor.git
+	url = https://github.com/RyoFunai/pointcloud_processor.git
