@@ -4,6 +4,8 @@ from launch import LaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
+from pathlib import Path
+import subprocess
 
 def generate_launch_description():
     # パラメータファイルのパス設定
@@ -12,6 +14,9 @@ def generate_launch_description():
         'config',
         'main_params.yaml'
     )
+
+    # トラッキングモジュールのスクリプトのパス設定
+    tracking_script_path = (Path(__file__).resolve().parent / '../scripts/qwiic_ros.py').resolve()
 
     # 起動パラメータファイルのロード
     with open(config_file_path, 'r') as file:
@@ -37,6 +42,8 @@ def generate_launch_description():
     # 起動の追加
     if(launch_params['joy'] is True):
         launch_discription.add_entity(joy_node)
+    if(launch_params['tracking_module'] is True):
+        subprocess.run(['python3', tracking_script_path], capture_output=True, text=True)
 
     launch_discription.add_entity(main_exec_node)
 

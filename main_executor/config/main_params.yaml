@@ -1,19 +1,16 @@
 launch: #起動パラメータ
   ros__parameters:
     joy: true
+    tracking_module: false
 
 /**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
   ros__parameters:
     # 並進  速度[m/s],加速度[m/s^2],加減速度[-m/s^2],躍度[m/s^3]
     linear_max:
       vel : 0.5
-      acc: 1.0
-      dec: 1.0
     # 回転  速度[deg/s],加速度[deg/s^2],加減速度[-deg/s^2],躍度[deg/s^3]
     angular_max :
       vel: 30.0
-      acc: 60.0
-      dec: 60.0
     autonomous_flag : false
 
 chassis_driver_node:
@@ -32,10 +29,6 @@ chassis_driver_node:
 socketcan_interface_node:
   ros__parameters:
     if_name : "0"
-cybergear:
-  socketcan_interface_node:
-    ros__parameters:
-      if_name : "_candleLight"
 
 cybergear_interface_node:
   ros__parameters:
