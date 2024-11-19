@@ -36,7 +36,15 @@ class OdometryPublisher(Node):
         self.myOtos.setLinearUnit(self.myOtos.kLinearUnitMeters)
         self.myOtos.setAngularUnit(self.myOtos.kAngularUnitRadians)
 
+        offset = qwiic_otos.Pose2D(0.0, 0.015, 0.0)
+        self.myOtos.setOffset(offset)
+
         self.myOtos.resetTracking()
+
+        current = qwiic_otos.Pose2D(0.0, 0.0, 0.0)
+        self.myOtos.setPosition(current)
+
+        print("Started Node")
 
     def timer_callback(self):
         odom = Odometry()
