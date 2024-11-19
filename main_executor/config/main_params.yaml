@@ -21,10 +21,16 @@ chassis_driver_node:
     restart_canid : 0x101
     motor_rev_canid : 0x102
     encoder_rev_canid : 0x103
+    pidgain_canid : 0x104
     velocity_canid : 0x108
 
     motor_rev: [0, 1, 0, 0]
     encoder_rev: [0, 0, 0, 0]
+
+    pidgain0: [0.0, 0.0, 0.0]
+    pidgain1: [0.0, 0.0, 0.0]
+    pidgain2: [0.0, 0.0, 0.0]
+    pidgain3: [0.0, 0.0, 0.0]
 
 socketcan_interface_node:
   ros__parameters:
