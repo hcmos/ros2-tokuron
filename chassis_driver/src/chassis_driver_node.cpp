@@ -19,8 +19,9 @@ restart_canid(static_cast<uint32_t>(get_parameter("restart_canid").as_int())),
 motor_rev_canid(static_cast<uint32_t>(get_parameter("motor_rev_canid").as_int())),
 encoder_rev_canid(static_cast<uint32_t>(get_parameter("encoder_rev_canid").as_int())),
 velocity_canid(static_cast<uint32_t>(get_parameter("velocity_canid").as_int())),
+pidgain_canid(static_cast<uint32_t>(get_parameter("pidgain_canid").as_int())),
 linear_max_vel(get_parameter("linear_max.vel").as_double()),
-angular_max_vel(get_parameter("angular_max.vel").as_double()),
+angular_max_vel(dtor(get_parameter("angular_max.vel").as_double())),
 sqrt2over2(std::sqrt(2.0) / 2.0)
 {
     _subscription_vel = this->create_subscription<geometry_msgs::msg::Twist>(
@@ -59,26 +60,40 @@ sqrt2over2(std::sqrt(2.0) / 2.0)
         index++;
     }
 
+    // PIDゲインの設定
+    send_pidgain(0, get_parameter("pidgain0").as_double_array());
+    send_pidgain(1, get_parameter("pidgain1").as_double_array());
+    send_pidgain(2, get_parameter("pidgain2").as_double_array());
+    send_pidgain(3, get_parameter("pidgain3").as_double_array());
+
     RCLCPP_INFO(this->get_logger(), "車輪半径:%f  取り付け距離:%f", wheel_radius, attached_direction);
+    RCLCPP_INFO(this->get_logger(), "最大並進速度:%f  最大回転速度:%f", linear_max_vel, angular_max_vel);
 }
 
 void ChassisDriver::_subscriber_callback_vel(const geometry_msgs::msg::Twist::SharedPtr msg){
     if(mode == Mode::stop) return;
     mode = Mode::cmd;
 
+/*座標系変換*/
     this->prime_vel = *msg;
     rotate_vector(msg->linear.x, msg->linear.y, 0.0); // poseが手に入ったらmap座標系での角度を入力
+    // この後にprime_velを操作すること
 
-    // 処理に使う一時データ
-    const double omega = msg->angular.z;
+/*処理に使う一時データ*/
+    const double omega = constrain(msg->angular.z, -angular_max_vel, angular_max_vel);
+    // 並進の処理
+    const double linear_length = std::sqrt(this->prime_vel.linear.x*this->prime_vel.linear.x + this->prime_vel.linear.y*this->prime_vel.linear.y);
+    if(linear_length > linear_max_vel){
+        this->prime_vel.linear.x *= linear_length / linear_max_vel;
+        this->prime_vel.linear.y *= linear_length / linear_max_vel;
+    }
+    // 上のスカラー制限処理で問題ないが，最終的なフィルターとして置いておく
     const double vx_p = constrain(this->prime_vel.linear.x, -linear_max_vel, linear_max_vel);
-    const double vy_p = constrain(this->prime_vel.linear.y, -angular_max_vel, angular_max_vel);
+    const double vy_p = constrain(this->prime_vel.linear.y, -linear_max_vel, linear_max_vel);
+
     std::array<double, 4> wheel_vel;
 
-    // wheel_vel[0] = (vx_p*sqrt2over2 + vy_p*sqrt2over2 + attached_direction * omega);
-    // wheel_vel[1] = (-vx_p*sqrt2over2 + vy_p*sqrt2over2 - attached_direction * omega);
-    // wheel_vel[2] = (-vx_p*sqrt2over2 - vy_p*sqrt2over2 + attached_direction * omega);
-    // wheel_vel[3] = (vx_p*sqrt2over2 - vy_p*sqrt2over2 - attached_direction * omega);
+/*速度の計算*/
     wheel_vel[0] = (vx_p*sqrt2over2 + vy_p*sqrt2over2 - attached_direction * omega);    //cos45とsin45はsqrt(2)/2なため
     wheel_vel[1] = (-vx_p*sqrt2over2 + vy_p*sqrt2over2 - attached_direction * omega);
     wheel_vel[2] = (-vx_p*sqrt2over2 - vy_p*sqrt2over2 - attached_direction * omega);
@@ -101,6 +116,7 @@ void ChassisDriver::rotate_vector(const double vx, const double vy, const double
     this->prime_vel.linear.y = vx_p * sin + vy_p * cos;
 }
 
+/*CANモータ設定*/
 void ChassisDriver::send_motorvel(const int motor_num, const double vel){
     // 出版
     auto msg_can = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
@@ -136,7 +152,25 @@ void ChassisDriver::send_encoder_rev(const int motor_num, const bool rev){
     msg_can->candata[0] = rev;
     publisher_can->publish(*msg_can);
 }
+void ChassisDriver::send_pidgain(const int motor_num, const std::vector<double> gain){
+    // 出版
+    auto msg_can = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+    msg_can->canid = pidgain_canid; // ベースID
+    msg_can->canid = (msg_can->canid & 0xF0F) | (motor_num << 4);   // モータ番号によって変更
+    msg_can->candlc = 5;
 
+    for(int i=0; i<3; i++){
+        uint8_t _candata[8];
+
+        _candata[0] = static_cast<uint8_t>(i);
+        float_to_bytes(_candata+1, static_cast<float>(gain.at(i)));
+
+        for(int i=0; i<msg_can->candlc; i++) msg_can->candata[i]=_candata[i];
+        publisher_can->publish(*msg_can);
+    }
+}
+
+/*基幹入力*/
 void ChassisDriver::_subscriber_callback_stop(const std_msgs::msg::Empty::SharedPtr msg){
     mode = Mode::stop;
     // 出版

@@ -30,6 +30,7 @@ private:
     void send_motorvel(const int motor_num, const double vel);
     void send_motor_rev(const int motor_num, const bool rev);
     void send_encoder_rev(const int motor_num, const bool rev);
+    void send_pidgain(const int motor_num, const std::vector<double> gain);
 
     rclcpp::Publisher<socketcan_interface_msg::msg::SocketcanIF>::SharedPtr publisher_can;
 
@@ -45,6 +46,7 @@ private:
     const uint32_t restart_canid;
     const uint32_t motor_rev_canid;
     const uint32_t encoder_rev_canid;
+    const uint32_t pidgain_canid;
     const uint32_t velocity_canid;
 
     // 変数
