@@ -9,7 +9,7 @@ import time
 
 class OdometryPublisher(Node):
     def __init__(self):
-        super().__init__('tracking_odometry_node')
+        super().__init__('qwiic_odometry_node')
 
         self.publisher_ = self.create_publisher(Odometry, 'odom', 10)
         self.timer = self.create_timer(0.01, self.timer_callback)   # 100Hz
