@@ -15,6 +15,8 @@ interval_ms(get_parameter("interval_ms").as_int()),
 pid_linear_x(get_parameter("interval_ms").as_int()),
 pid_linear_y(get_parameter("interval_ms").as_int()),
 pid_angular(get_parameter("interval_ms").as_int()),
+linear_max_vel(get_parameter("linear_max.vel").as_double()),
+angular_max_vel(dtor(get_parameter("angular_max.vel").as_double())),
 allowed_area(get_parameter("allowed_area").as_double_array())
 {
     _subscription_stop = this->create_subscription<std_msgs::msg::Empty>(
@@ -70,9 +72,9 @@ void PosePID::_publisher_callback(){
         1.0 - 2.0 * (self_pose->pose.orientation.z * self_pose->pose.orientation.z));
 
     auto msg_vel = std::make_shared<geometry_msgs::msg::Twist>();
-    msg_vel->linear.x = pid_linear_x.cycle(self_pose->pose.position.x, target->x);
-    msg_vel->linear.y = pid_linear_y.cycle(self_pose->pose.position.y, target->y);
-    msg_vel->angular.z = pid_angular.cycle(current_yaw, target->theta);
+    msg_vel->linear.x = pid_linear_x.cycle(self_pose->pose.position.x, target->x)*linear_max_vel;
+    msg_vel->linear.y = pid_linear_y.cycle(self_pose->pose.position.y, target->y)*linear_max_vel;
+    msg_vel->angular.z = pid_angular.cycle(current_yaw, target->theta)*angular_max_vel;
 
     // 出版
     publisher_vel->publish(*msg_vel);

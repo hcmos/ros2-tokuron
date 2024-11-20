@@ -47,6 +47,8 @@ private:
 
     // 定数
     const int interval_ms;
+    const double linear_max_vel;
+    const double angular_max_vel;
     const std::vector<double> allowed_area;
 
     //変数

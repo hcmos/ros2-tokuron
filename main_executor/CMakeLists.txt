@@ -12,6 +12,7 @@ find_package(chassis_driver REQUIRED)
 find_package(socketcan_interface REQUIRED)
 find_package(cybergear_interface REQUIRED)
 find_package(landmark_localization REQUIRED)
+find_package(pose_pid REQUIRED)
 include_directories(/usr/include/eigen3)
 
 add_executable(main_exec
@@ -25,6 +26,7 @@ ament_target_dependencies(main_exec
         socketcan_interface
         cybergear_interface
         landmark_localization
+        pose_pid
         )
 
 target_include_directories(main_exec

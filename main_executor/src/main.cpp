@@ -5,6 +5,7 @@
 #include "socketcan_interface/socketcan_interface_node.hpp"
 #include "cybergear_interface/cybergear_interface_node.hpp"
 #include "landmark_localization/landmark_localization.hpp"
+#include "pose_pid/pose_pid_node.hpp"
 
 int main(int argc, char * argv[]){
     rclcpp::init(argc,argv);
@@ -19,11 +20,13 @@ int main(int argc, char * argv[]){
     auto controller_node = std::make_shared<controller::Controller>(nodes_option);
     auto cybergear_interface_node = std::make_shared<cybergear_interface::CybergearInterface>(nodes_option);
     auto landmark_localization_node = std::make_shared<landmark_localization::LandmarkLocalization>(nodes_option);
+    auto pose_pid_node = std::make_shared<pose_pid::PosePID>(nodes_option);
 
     exec.add_node(socketcan_node);
     exec.add_node(controller_node);
     exec.add_node(chassis_driver_node);
     exec.add_node(cybergear_interface_node);
+    exec.add_node(pose_pid_node);
     // exec.add_node(landmark_localization_node);
 
     exec.spin();
