@@ -16,7 +16,7 @@ launch: #起動パラメータ
 chassis_driver_node:
   ros__parameters:
     wheel_radius : 0.03
-    attached_direction : 0.2828
+    attached_direction : 0.200343
     stop_canid : 0x100
     restart_canid : 0x101
     motor_rev_canid : 0x102
@@ -27,10 +27,10 @@ chassis_driver_node:
     motor_rev: [0, 1, 0, 0]
     encoder_rev: [0, 0, 0, 0]
 
-    pidgain0: [0.0, 0.0, 0.0]
-    pidgain1: [0.0, 0.0, 0.0]
-    pidgain2: [0.0, 0.0, 0.0]
-    pidgain3: [0.0, 0.0, 0.0]
+    pidgain0: [0.6, 0.1, 0.0]
+    pidgain1: [0.6, 0.1, 0.0]
+    pidgain2: [0.6, 0.1, 0.0]
+    pidgain3: [0.6, 0.1, 0.0]
 
 socketcan_interface_node:
   ros__parameters:
