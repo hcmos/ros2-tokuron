@@ -2,6 +2,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <geometry_msgs/msg/twist.hpp>
+#include <geometry_msgs/msg/pose_stamped.hpp>
 #include <std_msgs/msg/empty.hpp>
 #include "socketcan_interface_msg/msg/socketcan_if.hpp"
 
@@ -21,6 +22,7 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr _subscription_vel;
     rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _subscription_stop;
     rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _subscription_restart;
+    rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr _subscription_selfpose;
 
     void _subscriber_callback_vel(const geometry_msgs::msg::Twist::SharedPtr msg);
     void _subscriber_callback_stop(const std_msgs::msg::Empty::SharedPtr msg);
@@ -31,6 +33,7 @@ private:
     void send_motor_rev(const int motor_num, const bool rev);
     void send_encoder_rev(const int motor_num, const bool rev);
     void send_pidgain(const int motor_num, const std::vector<double> gain);
+    void _subscriber_callback_selfpose(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
 
     rclcpp::Publisher<socketcan_interface_msg::msg::SocketcanIF>::SharedPtr publisher_can;
 
@@ -51,6 +54,7 @@ private:
 
     // 変数
     geometry_msgs::msg::Twist prime_vel;
+    double current_yaw = 0.0;
 
     // 動作モード
     enum class Mode{

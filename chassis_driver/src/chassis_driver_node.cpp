@@ -39,6 +39,11 @@ sqrt2over2(std::sqrt(2.0) / 2.0)
         _qos,
         std::bind(&ChassisDriver::_subscriber_callback_restart, this, std::placeholders::_1)
     );
+    _subscription_selfpose = this->create_subscription<geometry_msgs::msg::PoseStamped>(
+        "self_pose",
+        _qos,
+        std::bind(&ChassisDriver::_subscriber_callback_selfpose, this, std::placeholders::_1)
+    );
 
     publisher_can = this->create_publisher<socketcan_interface_msg::msg::SocketcanIF>("can_tx", _qos);
 
@@ -76,7 +81,7 @@ void ChassisDriver::_subscriber_callback_vel(const geometry_msgs::msg::Twist::Sh
 
 /*座標系変換*/
     this->prime_vel = *msg;
-    rotate_vector(msg->linear.x, msg->linear.y, 0.0); // poseが手に入ったらmap座標系での角度を入力
+    rotate_vector(msg->linear.x, msg->linear.y, current_yaw); // poseが手に入ったらmap座標系での角度を入力
     // この後にprime_velを操作すること
 
 /*処理に使う一時データ*/
@@ -107,13 +112,20 @@ void ChassisDriver::_subscriber_callback_vel(const geometry_msgs::msg::Twist::Sh
     }
 }
 
+/*自己位置のコールバック*/
+void ChassisDriver::_subscriber_callback_selfpose(const geometry_msgs::msg::PoseStamped::SharedPtr msg){
+    this->current_yaw = std::atan2(
+        2.0 * (msg->pose.orientation.w * msg->pose.orientation.z),
+        1.0 - 2.0 * (msg->pose.orientation.z * msg->pose.orientation.z));
+}
+
 void ChassisDriver::rotate_vector(const double vx, const double vy, const double theta){
     const double cos = std::cos(theta);
     const double sin = std::sin(theta);
     const double vx_p = -vy;
     const double vy_p = vx;
-    this->prime_vel.linear.x = vx_p * cos - vy_p * sin;
-    this->prime_vel.linear.y = vx_p * sin + vy_p * cos;
+    this->prime_vel.linear.x = vx_p * cos + vy_p * sin;
+    this->prime_vel.linear.y = -vx_p * sin + vy_p * cos;
 }
 
 /*CANモータ設定*/
