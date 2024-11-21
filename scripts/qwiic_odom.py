@@ -36,7 +36,7 @@ class OdometryPublisher(Node):
         self.myOtos.setLinearUnit(self.myOtos.kLinearUnitMeters)
         self.myOtos.setAngularUnit(self.myOtos.kAngularUnitRadians)
 
-        offset = qwiic_otos.Pose2D(0.0, 0.015, 0.0)
+        offset = qwiic_otos.Pose2D(0.0, 0.030, 0.0)
         self.myOtos.setOffset(offset)
 
         self.myOtos.resetTracking()
