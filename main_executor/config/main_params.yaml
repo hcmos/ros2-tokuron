@@ -7,10 +7,10 @@ launch: #起動パラメータ
   ros__parameters:
     # 並進  速度[m/s],加速度[m/s^2],加減速度[-m/s^2],躍度[m/s^3]
     linear_max:
-      vel : 0.5
+      vel : 1.8
     # 回転  速度[deg/s],加速度[deg/s^2],加減速度[-deg/s^2],躍度[deg/s^3]
     angular_max :
-      vel: 30.0
+      vel: 80.0
     autonomous_flag : false
 
 socketcan_interface_node:
@@ -31,16 +31,16 @@ chassis_driver_node:
     motor_rev: [0, 1, 0, 0]
     encoder_rev: [0, 0, 0, 0]
 
-    pidgain0: [0.6, 0.1, 0.0]
-    pidgain1: [0.6, 0.1, 0.0]
-    pidgain2: [0.6, 0.1, 0.0]
-    pidgain3: [0.6, 0.1, 0.0]
+    pidgain0: [1.0, 0.0, 0.01]
+    pidgain1: [1.0, 0.0, 0.01]
+    pidgain2: [1.0, 0.0, 0.01]
+    pidgain3: [1.0, 0.0, 0.01]
 
 pose_pid_node:
   ros__parameters:
     interval_ms : 10
-    linear_pidgain : [0.0, 0.0, 0.0]
-    angular_pidgain : [0.0, 0.0, 0.0]
+    linear_pidgain : [1.1, 0.01, 0.0]
+    angular_pidgain : [1.0, 0.01, 0.0]
     allowed_area : [-1.0, 1.0, -2.0, 2.0]   #[x下限，x上限，y下限，y上限]
 
 cybergear_interface_node:
