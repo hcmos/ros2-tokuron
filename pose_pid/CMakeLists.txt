@@ -12,6 +12,6 @@ ament_auto_find_build_dependencies()
 ament_auto_add_library(pose_pid_node src/pose_pid_node.cpp)
 
 ament_export_include_directories(include)
-ament_export_libraries(pose_pid)
+# ament_export_libraries(pose_pid)
 
 ament_auto_package(INSTALL_TO_SHARE)
