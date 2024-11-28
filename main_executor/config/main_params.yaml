@@ -7,10 +7,10 @@ launch: #起動パラメータ
   ros__parameters:
     # 並進  速度[m/s],加速度[m/s^2],加減速度[-m/s^2],躍度[m/s^3]
     linear_max:
-      vel : 1.8
+      vel : 0.5 #1.8
     # 回転  速度[deg/s],加速度[deg/s^2],加減速度[-deg/s^2],躍度[deg/s^3]
     angular_max :
-      vel: 80.0
+      vel: 80.0 #80.0
     autonomous_flag : false
 
 socketcan_interface_node:
@@ -53,9 +53,9 @@ cybergear_interface_node:
     reverse_flag : false
     # 制御対象の最小・最大位置[deg]
     pos_limit_min : -90.0
-    pos_limit_max : 90.0
+    pos_limit_max : 0.0
     # 制御対象の最大速度[deg/s] <-サイバーギアの限界速度以下に設定する
-    limit_speed : 697.5 # 減速比 7.75:1
+    limit_speed : 279.0 # 減速比 7.75:1
 
 landmark_localization:
   ros__parameters:
