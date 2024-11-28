@@ -27,7 +27,7 @@ int main(int argc, char * argv[]){
     exec.add_node(chassis_driver_node);
     exec.add_node(cybergear_interface_node);
     exec.add_node(pose_pid_node);
-    // exec.add_node(landmark_localization_node);
+    exec.add_node(landmark_localization_node);
 
     exec.spin();
     rclcpp::shutdown();

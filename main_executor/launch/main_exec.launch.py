@@ -6,6 +6,7 @@ from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 from pathlib import Path
 import subprocess
+from launch.actions import IncludeLaunchDescription
 
 def generate_launch_description():
     # パラメータファイルのパス設定
@@ -17,6 +18,9 @@ def generate_launch_description():
 
     # トラッキングモジュールのスクリプトのパス設定
     tracking_script_path = (Path(__file__).resolve().parent / '../scripts/qwiic_ros.py').resolve()
+
+    # Livox MID360の起動ファイルのパス設定
+    livox_launch_path = os.path.join(get_package_share_directory('livox_ros_driver2'), 'launch_ROS2', 'msg_MID360_launch.py')
 
     # 起動パラメータファイルのロード
     with open(config_file_path, 'r') as file:
@@ -35,7 +39,10 @@ def generate_launch_description():
         executable = 'joy_node',
         output='screen'
     )
-
+    # Livox起動の設定
+    livox_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(livox_launch_path)
+    )
     # 起動エンティティクラスの作成
     launch_discription = LaunchDescription()
 
@@ -44,7 +51,8 @@ def generate_launch_description():
         launch_discription.add_entity(joy_node)
     if(launch_params['tracking_module'] is True):
         subprocess.run(['python3', tracking_script_path], capture_output=True, text=True)
-
+    if(launch_params['livox_mid360'] is True):
+        launch_discription.add_entity(livox_launch)
     launch_discription.add_entity(main_exec_node)
 
     return launch_discription

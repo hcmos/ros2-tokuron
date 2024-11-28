@@ -2,6 +2,7 @@ launch: #起動パラメータ
   ros__parameters:
     joy: true
     tracking_module: false
+    livox_mid360: true
 
 /**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
   ros__parameters:
@@ -60,11 +61,11 @@ cybergear_interface_node:
 landmark_localization:
   ros__parameters:
     min_x: 0.0
-    max_x: 4.0
+    max_x: 3.0
     min_y: -0.5
-    max_y: 1.0
-    min_z: -0.9
-    max_z: 1.0
+    max_y: 0.5
+    min_z: 0.0
+    max_z: 2.0
     voxel_size_x: 0.2
     voxel_size_y: 0.2
     voxel_size_z: 0.2
@@ -74,14 +75,16 @@ landmark_localization:
     D_voxel_size_z: 0.05
     voxel_search_range: 2
     ball_radius: 0.1
-    landmark_width: 0.9
-    landmark_height: 0.91
+    landmark_width: 0.63
+    landmark_height: 0.90
     width_tolerance: 0.1
-    height_tolerance: 0.4
+    height_tolerance: 0.2
     laser_weight: 10.0
     odom_weight_liner: 1.0e-2
     odom_weight_angler: 1.0e-2
     plane_iterations: 30
     line_iterations: 30
-    odom2laser_x: 1.0
-    odom2laser_y: 1.0
+      #   odom2laser_x: 0.365
+    odom2laser_x: 0.0
+      #odom2laser_y: 0.02
+    odom2laser_y: 0.0
