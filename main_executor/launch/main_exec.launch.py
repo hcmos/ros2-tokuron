@@ -16,12 +16,8 @@ def generate_launch_description():
         'main_params.yaml'
     )
 
-    # トラッキングモジュールのスクリプトのパス設定
-    tracking_script_path = (Path(__file__).resolve().parent / '../scripts/qwiic_ros.py').resolve()
-
     # Livox MID360の起動ファイルのパス設定
     livox_launch_path = os.path.join(get_package_share_directory('livox_ros_driver2'), 'launch_ROS2', 'msg_MID360_launch.py')
-
     # 起動パラメータファイルのロード
     with open(config_file_path, 'r') as file:
         launch_params = yaml.safe_load(file)['launch']['ros__parameters']
@@ -30,6 +26,13 @@ def generate_launch_description():
     main_exec_node = Node(
         package = 'main_executor',
         executable = 'main_exec',
+        parameters = [config_file_path],
+        output='screen'
+    )
+    # トラッキングモジュールのノードの作成
+    qwiic_node = Node(
+        package = 'qwiic',
+        executable = 'odom_node',
         parameters = [config_file_path],
         output='screen'
     )
@@ -49,10 +52,11 @@ def generate_launch_description():
     # 起動の追加
     if(launch_params['joy'] is True):
         launch_discription.add_entity(joy_node)
-    if(launch_params['tracking_module'] is True):
-        subprocess.run(['python3', tracking_script_path], capture_output=True, text=True)
     if(launch_params['livox_mid360'] is True):
         launch_discription.add_entity(livox_launch)
+    if(launch_params['odom'] is True):
+        launch_discription.add_entity(qwiic_node)
+
     launch_discription.add_entity(main_exec_node)
 
     return launch_discription

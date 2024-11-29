@@ -25,6 +25,7 @@ is_autonomous(get_parameter("autonomous_flag").as_bool())
     publisher_restart = this->create_publisher<std_msgs::msg::Empty>("restart", _qos);
     publisher_emergency = this->create_publisher<std_msgs::msg::Bool>("emergency", _qos);
     publisher_autonomous = this->create_publisher<std_msgs::msg::Bool>("autonomous", _qos);
+    publisher_cybergear = this->create_publisher<std_msgs::msg::Float64>("motor/pos", _qos);
 
     // 駆動系に電源が行っている可能性もあるのでリスタートする
     publisher_restart->publish(*std::make_shared<std_msgs::msg::Empty>());
@@ -52,6 +53,20 @@ void Controller::_subscriber_callback_joy(const sensor_msgs::msg::Joy::SharedPtr
     if(upedge_restart(msg->buttons[static_cast<int>(Buttons::Menu)])){
         publisher_restart->publish(*std::make_shared<std_msgs::msg::Empty>());
         RCLCPP_INFO(this->get_logger(), "再稼働");
+    }
+    // 打ち返しの手動
+    if(upedge_cybergear(msg->buttons[static_cast<int>(Buttons::B)])){
+        auto msg = std::make_shared<std_msgs::msg::Float64>();
+        if(!cybergear_hit){
+            msg->data = dtor(0.0);
+            cybergear_hit = true;
+            RCLCPP_INFO(this->get_logger(), "射出");
+        }else{
+            msg->data = dtor(-120.0);
+            cybergear_hit = false;
+            RCLCPP_INFO(this->get_logger(), "収納");
+        }
+        publisher_cybergear->publish(*msg);
     }
     // 手動の場合、速度指令値を送る
     if(!is_autonomous){

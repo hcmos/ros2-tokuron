@@ -55,6 +55,11 @@ void Driver::set_mech_position_to_zero(){
     send_command(target_id, CMD::SET_MECH_POSITION_TO_ZERO, master_id, 8, data);
 }
 
+// 設定
+void Driver::set_position_kp(const float gain){
+    write_float_data(target_id, ADDR::LOC_KP, gain, 0.0f, 200.0f);
+}
+
 
 /*プライベート関数*/
 // 設定

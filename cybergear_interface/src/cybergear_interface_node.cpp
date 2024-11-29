@@ -18,7 +18,8 @@ is_reversed(get_parameter("reverse_flag").as_bool()),
 
 pos_limit_min(dtor(get_parameter("pos_limit_min").as_double()) * gear_rate),
 pos_limit_max(dtor(get_parameter("pos_limit_max").as_double()) * gear_rate),
-limit_speed(dtor(get_parameter("limit_speed").as_double()))
+limit_speed(dtor(get_parameter("limit_speed").as_double()) * gear_rate),
+pos_kp(dtor(get_parameter("pos_kp").as_double()) * gear_rate)
 {
     _subscription_pos = this->create_subscription<std_msgs::msg::Float64>(
         "motor/pos",
@@ -46,14 +47,16 @@ limit_speed(dtor(get_parameter("limit_speed").as_double()))
         [this] { _publisher_callback(); }
     );
 
-    // driver.change_motor_boardrate(0x02);
     driver.init_motor(cybergear_defs::MODE::POSITION);
-    driver.set_limit_speed(static_cast<float>(limit_speed*gear_rate));
+    driver.set_limit_speed(static_cast<float>(limit_speed));
     driver.enable_motor();
+
+    driver.set_position_kp(static_cast<float>(pos_kp));
 
     RCLCPP_INFO(this->get_logger(), "init cybergear interface node");
     RCLCPP_INFO(this->get_logger(), "マスターID:0x%03X  ターゲットID:0x%03X", get_parameter("master_id").as_int(), get_parameter("target_id").as_int());
     RCLCPP_INFO(this->get_logger(), "逆転:%d  最大位置:%.3lf  最小位置:%.3lf", is_reversed, pos_limit_max, pos_limit_min);
+    RCLCPP_INFO(this->get_logger(), "最大速度:%.3lf  位置ゲイン:%.3lf", limit_speed, pos_kp);
 }
 
 void CybergearInterface::_publisher_callback(){

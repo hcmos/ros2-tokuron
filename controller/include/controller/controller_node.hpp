@@ -6,6 +6,7 @@
 #include <std_msgs/msg/empty.hpp>
 #include <std_msgs/msg/bool.hpp>
 #include <std_msgs/msg/char.hpp>
+#include <std_msgs/msg/float64.hpp>
 #include "socketcan_interface_msg/msg/socketcan_if.hpp"
 
 #include "utilities/utils.hpp"
@@ -31,6 +32,7 @@ private:
     rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr publisher_restart;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr publisher_emergency;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr publisher_autonomous;
+    rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_cybergear;
 
     rclcpp::QoS _qos = rclcpp::QoS(10);
 
@@ -39,10 +41,12 @@ private:
 
     bool is_autonomous = false;
     bool is_emergency = false;
+    bool cybergear_hit = false;
 
     utils::UpEdge upedge_emergency;
     utils::UpEdge upedge_auto;
     utils::UpEdge upedge_restart;
+    utils::UpEdge upedge_cybergear;
 
     enum class Axes{
         L_x,

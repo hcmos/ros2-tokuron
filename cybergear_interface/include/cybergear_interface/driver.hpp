@@ -20,6 +20,9 @@ public:
     void set_speed_ref(const float speed, const float min, const float max);
     void set_mech_position_to_zero();
 
+    // 設定
+    void set_position_kp(const float gain);
+
     // 基幹情報変更
     void change_motor_can_id(const uint8_t can_id);
     void change_motor_boardrate(const uint8_t value);
