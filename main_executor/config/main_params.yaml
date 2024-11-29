@@ -1,7 +1,7 @@
 launch: #起動パラメータ
   ros__parameters:
     joy: true
-    tracking_module: false
+    odom: true
 
 /**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
   ros__parameters:
@@ -42,6 +42,10 @@ pose_pid_node:
     linear_pidgain : [1.1, 0.01, 0.0]
     angular_pidgain : [1.0, 0.01, 0.0]
     allowed_area : [-1.0, 1.0, -2.0, 2.0]   #[x下限，x上限，y下限，y上限]
+
+qwiic_odometry_node:
+  ros__parameters:
+    attached_pose : [0.0, 0.03, 0.0]    #x, y, yaw
 
 cybergear_interface_node:
   ros__parameters:
