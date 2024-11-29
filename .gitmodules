@@ -4,3 +4,12 @@
 [submodule "pointcloud_processor"]
 	path = pointcloud_processor
 	url = https://github.com/RyoFunai/pointcloud_processor.git
+[submodule "impact_point_estimator"]
+	path = impact_point_estimator
+	url = https://github.com/RyoFunai/impact_point_estimator.git
+[submodule "ball_detector"]
+	path = ball_detector
+	url = https://github.com/RyoFunai/ball_detector.git
+[submodule "livox_ros_driver2"]
+	path = livox_ros_driver2
+	url = https://github.com/Livox-SDK/livox_ros_driver2.git
