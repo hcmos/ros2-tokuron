@@ -75,7 +75,7 @@ landmark_localization:
     D_voxel_size_z: 0.05
     voxel_search_range: 2
     ball_radius: 0.1
-    landmark_width: 0.63
+    landmark_width: 1.26
     landmark_height: 0.90
     width_tolerance: 0.1
     height_tolerance: 0.2
@@ -84,7 +84,22 @@ landmark_localization:
     odom_weight_angler: 1.0e-2
     plane_iterations: 30
     line_iterations: 30
-      #   odom2laser_x: 0.365
-    odom2laser_x: 0.0
-      #odom2laser_y: 0.02
-    odom2laser_y: 0.0
+    odom2laser_x: 0.365
+      #  odom2laser_x: 0.0
+    odom2laser_y: 0.02
+      # odom2laser_y: 0.0
+
+
+ball_detector:
+  ros__parameters:
+    min_x: 0.0
+    max_x: 3.0
+    min_y: -1.0
+    max_y: 1.0
+    min_z: 0.1
+    max_z: 2.0
+    voxel_size_x: 0.1
+    voxel_size_y: 0.1
+    voxel_size_z: 0.1
+    voxel_search_range: 1
+    ball_radius: 0.05
