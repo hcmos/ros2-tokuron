@@ -4,3 +4,6 @@
 [submodule "pointcloud_processor"]
 	path = pointcloud_processor
 	url = https://github.com/RyoFunai/pointcloud_processor.git
+[submodule "ball_detector"]
+	path = ball_detector
+	url = https://github.com/RyoFunai/ball_detector.git

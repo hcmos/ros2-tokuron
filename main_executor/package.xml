@@ -16,6 +16,7 @@
   <depend>socketcan_interface</depend>
   <depend>cybergear_interface</depend>
   <depend>landmark_localization</depend>
+  <depend>ball_detector</depend>
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>
