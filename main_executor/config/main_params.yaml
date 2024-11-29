@@ -55,7 +55,10 @@ cybergear_interface_node:
     pos_limit_min : -90.0
     pos_limit_max : 0.0
     # 制御対象の最大速度[deg/s] <-サイバーギアの限界速度以下に設定する
-    limit_speed : 279.0 # 減速比 7.75:1
+    limit_speed : 10.0 # 減速比 7.75:1
+
+    # ゲイン
+    pos_kp : 10.0
 
 landmark_localization:
   ros__parameters:

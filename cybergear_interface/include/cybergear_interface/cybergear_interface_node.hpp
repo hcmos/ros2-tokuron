@@ -42,6 +42,8 @@ private:
     const double gear_rate;
     const double pos_limit_min;
     const double pos_limit_max;
+    const double pos_kp;
+    const double base_gear_rate = 7.75;
 
     // 変数
     double pos_ref = 0.0;
