@@ -38,12 +38,12 @@ private:
     // 定数
     const int interval_ms;
     const bool is_reversed;
-    const double limit_speed;
+    const double base_gear_rate = 7.75;
     const double gear_rate;
+    const double limit_speed;
     const double pos_limit_min;
     const double pos_limit_max;
     const double pos_kp;
-    const double base_gear_rate = 7.75;
 
     // 変数
     double pos_ref = 0.0;
