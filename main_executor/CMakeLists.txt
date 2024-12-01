@@ -13,6 +13,8 @@ find_package(socketcan_interface REQUIRED)
 find_package(cybergear_interface REQUIRED)
 find_package(landmark_localization REQUIRED)
 find_package(pose_pid REQUIRED)
+find_package(ball_detector REQUIRED)
+find_package(impact_point_estimator REQUIRED)
 include_directories(/usr/include/eigen3)
 
 add_executable(main_exec
@@ -27,6 +29,8 @@ ament_target_dependencies(main_exec
         cybergear_interface
         landmark_localization
         pose_pid
+	ball_detector
+        impact_point_estimator
         )
 
 target_include_directories(main_exec

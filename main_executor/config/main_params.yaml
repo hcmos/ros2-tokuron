@@ -8,7 +8,7 @@ launch: #起動パラメータ
   ros__parameters:
     # 並進  速度[m/s],加速度[m/s^2],加減速度[-m/s^2],躍度[m/s^3]
     linear_max:
-      vel : 0.5 #1.8
+      vel : 1.8 #1.8
     # 回転  速度[deg/s],加速度[deg/s^2],加減速度[-deg/s^2],躍度[deg/s^3]
     angular_max :
       vel: 80.0 #80.0
@@ -42,7 +42,7 @@ pose_pid_node:
     interval_ms : 10
     linear_pidgain : [1.1, 0.01, 0.0]
     angular_pidgain : [1.0, 0.01, 0.0]
-    allowed_area : [-1.0, 1.0, -2.0, 2.0]   #[x下限，x上限，y下限，y上限]
+    allowed_area : [-2.0, -0.8, -1.0, 1.0]   #[x下限，x上限，y下限，y上限]
 
 qwiic_odometry_node:
   ros__parameters:
@@ -65,25 +65,26 @@ cybergear_interface_node:
     # ゲイン
     pos_kp : 50.0
 
+
 landmark_localization:
   ros__parameters:
-    min_x: 0.0
-    max_x: 3.0
-    min_y: -0.5
-    max_y: 0.5
-    min_z: 0.0
-    max_z: 2.0
+    min_x: -1.0
+    max_x: 1.0
+    min_y: -1.5
+    max_y: 1.5
+    min_z: 0.05
+    max_z: 1.1
     voxel_size_x: 0.2
     voxel_size_y: 0.2
     voxel_size_z: 0.2
     # D_voxel_size_x: 0.0015
-    D_voxel_size_x: 0.05
-    D_voxel_size_y: 0.05
-    D_voxel_size_z: 0.05
+    D_voxel_size_x: 0.04
+    D_voxel_size_y: 0.04
+    D_voxel_size_z: 0.04
     voxel_search_range: 2
     ball_radius: 0.1
-    landmark_width: 1.26
-    landmark_height: 0.90
+    landmark_width: 1.2
+    landmark_height: 0.8
     width_tolerance: 0.1
     height_tolerance: 0.2
     laser_weight: 10.0
@@ -91,16 +92,13 @@ landmark_localization:
     odom_weight_angler: 1.0e-2
     plane_iterations: 30
     line_iterations: 30
-    odom2laser_x: 0.365
-      #  odom2laser_x: 0.0
+    odom2laser_x: 0.165
     odom2laser_y: 0.02
-      # odom2laser_y: 0.0
-
 
 ball_detector:
   ros__parameters:
-    min_x: 0.0
-    max_x: 3.0
+    min_x: -2.0
+    max_x: 0.1
     min_y: -1.0
     max_y: 1.0
     min_z: 0.1
@@ -108,5 +106,12 @@ ball_detector:
     voxel_size_x: 0.1
     voxel_size_y: 0.1
     voxel_size_z: 0.1
-    voxel_search_range: 1
-    ball_radius: 0.05
+    voxel_search_range: 2
+    ball_radius: 0.2
+
+impact_point_estimator:
+  ros__parameters:
+    motor_pos: 1.5
+    offset_time: 0.0
+    curve_points_num: 3
+

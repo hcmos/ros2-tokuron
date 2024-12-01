@@ -17,6 +17,8 @@
   <depend>cybergear_interface</depend>
   <depend>landmark_localization</depend>
   <depend>pose_pid</depend>
+  <depend>ball_detector</depend>
+  <depend>impact_point_estimator</depend>
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <test_depend>ament_lint_auto</test_depend>
