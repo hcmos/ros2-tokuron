@@ -1,8 +1,8 @@
 launch: #起動パラメータ
   ros__parameters:
     joy: true
-    tracking_module: false
     livox_mid360: true
+    odom: true
 
 /**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
   ros__parameters:
