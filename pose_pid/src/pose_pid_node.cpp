@@ -102,10 +102,11 @@ void PosePID::_subscriber_callback_selfpose(const geometry_msgs::msg::PoseStampe
     self_pose = msg;
 }
 void PosePID::reset(){
-    target = nullptr;
+    // target = nullptr;
     pid_linear_x.reset();
     pid_linear_y.reset();
     pid_angular.reset();
+    RCLCPP_INFO(this->get_logger(), "初期化");
 }
 
 
