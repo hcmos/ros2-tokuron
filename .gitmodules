@@ -12,7 +12,7 @@
 	url = https://github.com/RyoFunai/ball_detector.git
 [submodule "livox_ros_driver2"]
 	path = livox_ros_driver2
-	url = https://github.com/Livox-SDK/livox_ros_driver2.git
+	url = https://github.com/RyoFunai/livox_ros_driver2.git
 [submodule "Livox-SDK2"]
 	path = Livox-SDK2
-	url = https://github.com/Livox-SDK/Livox-SDK2.git
+	url = https://github.com/RyoFunai/Livox-SDK2.git
