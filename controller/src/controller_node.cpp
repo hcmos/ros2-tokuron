@@ -19,13 +19,20 @@ is_autonomous(get_parameter("autonomous_flag").as_bool())
         _qos,
         std::bind(&Controller::_subscriber_callback_joy, this, std::placeholders::_1)
     );
+    _subscription_ems = this->create_subscription<socketcan_interface_msg::msg::SocketcanIF>(
+        "can_rx_001",
+        _qos,
+        std::bind(&Controller::_subscriber_callback_ems, this, std::placeholders::_1)
+    );
 
     publisher_vel = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", _qos);
     publisher_stop = this->create_publisher<std_msgs::msg::Empty>("stop", _qos);
     publisher_restart = this->create_publisher<std_msgs::msg::Empty>("restart", _qos);
-    publisher_emergency = this->create_publisher<std_msgs::msg::Bool>("emergency", _qos);
+    // publisher_emergency = this->create_publisher<std_msgs::msg::Bool>("emergency", _qos);
     publisher_autonomous = this->create_publisher<std_msgs::msg::Bool>("autonomous", _qos);
     publisher_cybergear = this->create_publisher<std_msgs::msg::Float64>("motor/pos", _qos);
+    publisher_can = this->create_publisher<socketcan_interface_msg::msg::SocketcanIF>("can_tx", _qos);
+
 
     // 駆動系に電源が行っている可能性もあるのでリスタートする
     publisher_restart->publish(*std::make_shared<std_msgs::msg::Empty>());
@@ -33,14 +40,20 @@ is_autonomous(get_parameter("autonomous_flag").as_bool())
 
 void Controller::_subscriber_callback_joy(const sensor_msgs::msg::Joy::SharedPtr msg){
 
-    // 緊急停止(未実装だが今後のため)
     if(upedge_emergency(msg->buttons[static_cast<int>(Buttons::Share)])){
-        publisher_stop->publish(*std::make_shared<std_msgs::msg::Empty>());
+        auto msg_can = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+        msg_can->candlc = 0;
 
-        auto msg_emergency = std::make_shared<std_msgs::msg::Bool>();
-        msg_emergency->data = is_emergency = !is_emergency;
-        publisher_emergency->publish(*msg_emergency);
-        RCLCPP_INFO(this->get_logger(), "緊急停止フラグ : %d", msg_emergency->data);
+        if(is_emergency){
+            msg_can->canid = 0x00;
+            RCLCPP_INFO(this->get_logger(), "緊急停止 解除");
+        }
+        else{
+            msg_can->canid = 0x01;
+            RCLCPP_INFO(this->get_logger(), "緊急停止 !!");
+        }
+        // 出版
+        publisher_can->publish(*msg_can);
     }
     // 自律か手動か
     if(upedge_auto(msg->buttons[static_cast<int>(Buttons::View)])){
@@ -77,6 +90,17 @@ void Controller::_subscriber_callback_joy(const sensor_msgs::msg::Joy::SharedPtr
         publisher_vel->publish(*msg_vel);
     }
 
+}
+
+void Controller::_subscriber_callback_ems(const socketcan_interface_msg::msg::SocketcanIF::SharedPtr msg){
+    if(msg->candata == 0x01){  //緊急停止ON
+        publisher_stop->publish(*std::make_shared<std_msgs::msg::Empty>());
+        is_emergency = true;
+    }
+    else if(msg->candata == 0x00){ //緊急停止OFF
+        is_emergency = false;
+    }
+    RCLCPP_INFO(this->get_logger(), "緊急停止フラグ : %d", is_emergency);
 }
 
 }  // namespace controller
