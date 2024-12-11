@@ -1,7 +1,7 @@
 launch: #起動パラメータ
   ros__parameters:
     joy: true
-    livox_mid360: true
+    livox_mid360: false
     odom: true
 
 /**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
@@ -60,10 +60,10 @@ cybergear_interface_node:
     pos_limit_min : -120.0
     pos_limit_max : 0.0
     # 制御対象の最大速度[deg/s] <-サイバーギアの限界速度以下に設定する
-    limit_speed : 540.0
+    limit_speed : 540.0 # 540
 
     # ゲイン
-    pos_kp : 50.0
+    pos_kp : 100.0
 
 
 landmark_localization:
@@ -114,4 +114,3 @@ impact_point_estimator:
     motor_pos: 1.5
     offset_time: 0.0
     curve_points_num: 3
-

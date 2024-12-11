@@ -20,7 +20,7 @@ is_autonomous(get_parameter("autonomous_flag").as_bool())
         std::bind(&Controller::_subscriber_callback_joy, this, std::placeholders::_1)
     );
     _subscription_ems = this->create_subscription<socketcan_interface_msg::msg::SocketcanIF>(
-        "can_rx_001",
+        "can_rx_00F",
         _qos,
         std::bind(&Controller::_subscriber_callback_ems, this, std::placeholders::_1)
     );
@@ -41,6 +41,7 @@ is_autonomous(get_parameter("autonomous_flag").as_bool())
 void Controller::_subscriber_callback_joy(const sensor_msgs::msg::Joy::SharedPtr msg){
 
     if(upedge_emergency(msg->buttons[static_cast<int>(Buttons::Share)])){
+        is_emergency = !is_emergency;
         auto msg_can = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
         msg_can->candlc = 0;
 
@@ -93,14 +94,14 @@ void Controller::_subscriber_callback_joy(const sensor_msgs::msg::Joy::SharedPtr
 }
 
 void Controller::_subscriber_callback_ems(const socketcan_interface_msg::msg::SocketcanIF::SharedPtr msg){
-    if(msg->candata == 0x01){  //緊急停止ON
+    if(msg->candata[0] == 0x01){  //緊急停止ON
         publisher_stop->publish(*std::make_shared<std_msgs::msg::Empty>());
-        is_emergency = true;
+        // is_emergency = true;
     }
-    else if(msg->candata == 0x00){ //緊急停止OFF
-        is_emergency = false;
+    else if(msg->candata[0] == 0x00){ //緊急停止OFF
+        // is_emergency = false;
     }
-    RCLCPP_INFO(this->get_logger(), "緊急停止フラグ : %d", is_emergency);
+    RCLCPP_INFO(this->get_logger(), "緊急停止フラグ : %d", msg->candata[0]);
 }
 
 }  // namespace controller
