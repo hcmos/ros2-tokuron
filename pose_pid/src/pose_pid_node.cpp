@@ -79,7 +79,7 @@ void PosePID::_publisher_callback(){
         2.0 * (self_pose->pose.orientation.w * self_pose->pose.orientation.z),
         1.0 - 2.0 * (self_pose->pose.orientation.z * self_pose->pose.orientation.z));
 
-    RCLCPP_INFO(this->get_logger(), "current  x:%f  y:%f  yaw:%f", self_pose->pose.position.x, self_pose->pose.position.y, current_yaw);
+    // RCLCPP_INFO(this->get_logger(), "current  x:%f  y:%f  yaw:%f", self_pose->pose.position.x, self_pose->pose.position.y, current_yaw);
 
     msg_vel->linear.x = pid_linear_x.cycle(self_pose->pose.position.x, target->x)*linear_max_vel;
     msg_vel->linear.y = pid_linear_y.cycle(self_pose->pose.position.y, target->y)*linear_max_vel;
