@@ -31,6 +31,7 @@ is_autonomous(get_parameter("autonomous_flag").as_bool())
     // publisher_emergency = this->create_publisher<std_msgs::msg::Bool>("emergency", _qos);
     publisher_autonomous = this->create_publisher<std_msgs::msg::Bool>("autonomous", _qos);
     publisher_cybergear = this->create_publisher<std_msgs::msg::Float64>("motor/pos", _qos);
+    publisher_cybergear_reset = this->create_publisher<std_msgs::msg::Empty>("motor/reset", _qos);
     publisher_can = this->create_publisher<socketcan_interface_msg::msg::SocketcanIF>("can_tx", _qos);
 
 
@@ -81,6 +82,10 @@ void Controller::_subscriber_callback_joy(const sensor_msgs::msg::Joy::SharedPtr
             RCLCPP_INFO(this->get_logger(), "収納");
         }
         publisher_cybergear->publish(*msg);
+    }
+    // サイバーギアのリセット
+    if(upedge_cybergear_reset(msg->buttons[static_cast<int>(Buttons::L_Stick)])){
+        publisher_cybergear_reset->publish(*std::make_shared<std_msgs::msg::Empty>());
     }
     // 手動の場合、速度指令値を送る
     if(!is_autonomous){
