@@ -1,7 +1,7 @@
 launch: #起動パラメータ
   ros__parameters:
     joy: true
-    livox_mid360: false
+    livox_mid360: true
     odom: true
 
 /**:  #ワイルドカード(ここのパラメータは全ノードから読める: <名前に注意>)
@@ -42,7 +42,7 @@ pose_pid_node:
     interval_ms : 10
     linear_pidgain : [1.1, 0.01, 0.0]
     angular_pidgain : [1.0, 0.01, 0.0]
-    allowed_area : [-2.0, -0.8, -1.0, 1.0]   #[x下限，x上限，y下限，y上限]
+    allowed_area : [-2.0, -1.0, -1.0, 1.0]   #[x下限，x上限，y下限，y上限]
 
 qwiic_odometry_node:
   ros__parameters:
@@ -58,12 +58,12 @@ cybergear_interface_node:
     reverse_flag : false
     # 制御対象の最小・最大位置[deg]
     pos_limit_min : -120.0
-    pos_limit_max : 0.0
+    pos_limit_max : -40.0
     # 制御対象の最大速度[deg/s] <-サイバーギアの限界速度以下に設定する
-    limit_speed : 540.0 # 540
+    limit_speed : 720.0 # 540
 
     # ゲイン
-    pos_kp : 100.0
+    pos_kp : 30.0
 
 
 landmark_localization:
@@ -72,21 +72,13 @@ landmark_localization:
     max_x: 1.0
     min_y: -1.5
     max_y: 1.5
-    min_z: 0.05
+    min_z: -0.3
     max_z: 1.1
-    voxel_size_x: 0.2
-    voxel_size_y: 0.2
-    voxel_size_z: 0.2
-    # D_voxel_size_x: 0.0015
-    D_voxel_size_x: 0.04
-    D_voxel_size_y: 0.04
-    D_voxel_size_z: 0.04
-    voxel_search_range: 2
-    ball_radius: 0.1
+    livox_pitch: 0.0
     landmark_width: 1.2
     landmark_height: 0.8
     width_tolerance: 0.1
-    height_tolerance: 0.2
+    height_tolerance: 0.4
     laser_weight: 10.0
     odom_weight_liner: 1.0e-2
     odom_weight_angler: 1.0e-2
@@ -94,23 +86,32 @@ landmark_localization:
     line_iterations: 30
     odom2laser_x: 0.165
     odom2laser_y: 0.02
+    use_y_median: true
 
 ball_detector:
   ros__parameters:
-    min_x: -2.0
-    max_x: 0.1
+    min_x: -1.5
+    max_x: 1.0
     min_y: -1.0
     max_y: 1.0
     min_z: 0.1
     max_z: 2.0
+    livox_pitch: 0.0
     voxel_size_x: 0.1
     voxel_size_y: 0.1
     voxel_size_z: 0.1
-    voxel_search_range: 2
-    ball_radius: 0.2
+    voxel_search_range: 1
+    ball_radius: 0.075
+    ball_vel_min: 0.5
+    max_distance_for_association: 1.0
+    missing_count_threshold: 15
 
 impact_point_estimator:
   ros__parameters:
-    motor_pos: 1.5
-    offset_time: 0.0
-    curve_points_num: 3
+    motor_pos: 0.0
+    reroad: -3.0
+    offset_time: -1.0
+    curve_points_num: 4
+    standby_pose_x: -2.0
+    standby_pose_y: 0.0
+    target_height: 0.4
