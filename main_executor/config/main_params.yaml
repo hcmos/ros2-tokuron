@@ -40,11 +40,12 @@ chassis_driver_node:
 pose_pid_node:
   ros__parameters:
     interval_ms : 10
-    linear_pidgain : [1.1, 0.01, 0.0]
+    linear_pidgain : [3.0, 0.01, 0.0]
+    # linear_pidgain : [1.1, 0.01, 0.0]
     angular_pidgain : [1.0, 0.01, 0.0]
-    allowed_area : [-2.0, -1.0, -1.0, 1.0]   #[x下限，x上限，y下限，y上限]
+    allowed_area : [-0.25, 1.0, -0.8, 0.8]   #[x下限，x上限，y下限，y上限]
 
-qwiic_odometry_node:
+qwiic_pose_node:
   ros__parameters:
     attached_pose : [0.0, 0.03, 0.0]    #x, y, yaw
 
@@ -64,7 +65,6 @@ cybergear_interface_node:
 
     # ゲイン
     pos_kp : 30.0
-
 
 landmark_localization:
   ros__parameters:
@@ -90,28 +90,37 @@ landmark_localization:
 
 ball_detector:
   ros__parameters:
-    min_x: -1.5
-    max_x: 1.0
+    min_x: 0.0
+    max_x: 4.0
     min_y: -1.0
     max_y: 1.0
-    min_z: 0.1
-    max_z: 2.0
-    livox_pitch: 0.0
-    voxel_size_x: 0.1
-    voxel_size_y: 0.1
-    voxel_size_z: 0.1
+    min_z: 0.4
+    max_z: 2.4
+    livox_pitch: -16.0
+    voxel_size_x: 0.15
+    voxel_size_y: 0.15
+    voxel_size_z: 0.15
     voxel_search_range: 1
-    ball_radius: 0.075
-    ball_vel_min: 0.5
-    max_distance_for_association: 1.0
+    ball_radius: 0.15
+    ball_vel_min: 0.00
+    max_distance_for_association: 0.5
     missing_count_threshold: 15
+    odom2laser_x: 0.165
+    odom2laser_y: 0.02
 
 impact_point_estimator:
   ros__parameters:
     motor_pos: 0.0
     reroad: -3.0
-    offset_time: -1.0
-    curve_points_num: 4
-    standby_pose_x: -2.0
+    offset_time: -0.1
+    curve_points_num: 2
+    standby_pose_x: 0.0
     standby_pose_y: 0.0
-    target_height: 0.4
+    lidar_to_target_x: -0.2
+    lidar_to_target_y: -0.02
+    lidar_to_target_z: 0.5
+    V_min: 1.0
+    V_max: 7.0
+    expected_direction: [-1.0, 0.0, 0.0]
+    theta_max_deg: 60.0
+    first_goal_x: 0.0

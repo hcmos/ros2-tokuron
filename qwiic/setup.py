@@ -21,6 +21,7 @@ setup(
     entry_points={
         'console_scripts': [
             'odom_node = qwiic.odom_node:main',
+            'pose_node = qwiic.pose_node:main',
         ],
     },
 )
