@@ -7,12 +7,13 @@
 #include <geometry_msgs/msg/pose2_d.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/point_stamped.hpp>
+#include <geometry_msgs/msg/twist_stamped.hpp>
 
 #include "utilities/position_pid.hpp"
 
 #include "pose_pid/visibility_control.h"
 
-namespace pose_pid{
+    namespace pose_pid{
 
 class PosePID : public rclcpp::Node {
 public:
@@ -39,7 +40,8 @@ private:
 
     void reset();
 
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_vel;
+    rclcpp::Publisher<geometry_msgs::msg::TwistStamped>::SharedPtr publisher_vel;
+    // rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_vel;
 
     rclcpp::QoS _qos = rclcpp::QoS(10);
 

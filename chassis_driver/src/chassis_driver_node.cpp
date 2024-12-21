@@ -24,7 +24,7 @@ linear_max_vel(get_parameter("linear_max.vel").as_double()),
 angular_max_vel(dtor(get_parameter("angular_max.vel").as_double())),
 sqrt2over2(std::sqrt(2.0) / 2.0)
 {
-    _subscription_vel = this->create_subscription<geometry_msgs::msg::Twist>(
+    _subscription_vel = this->create_subscription<geometry_msgs::msg::TwistStamped>(
         "cmd_vel",
         _qos,
         std::bind(&ChassisDriver::_subscriber_callback_vel, this, std::placeholders::_1)
@@ -75,26 +75,26 @@ sqrt2over2(std::sqrt(2.0) / 2.0)
     RCLCPP_INFO(this->get_logger(), "最大並進速度:%f  最大回転速度:%f", linear_max_vel, angular_max_vel);
 }
 
-void ChassisDriver::_subscriber_callback_vel(const geometry_msgs::msg::Twist::SharedPtr msg){
+void ChassisDriver::_subscriber_callback_vel(const geometry_msgs::msg::TwistStamped::SharedPtr msg){
     if(mode == Mode::stop) return;
     mode = Mode::cmd;
 
 /*座標系変換*/
     this->prime_vel = *msg;
-    rotate_vector(msg->linear.x, msg->linear.y, current_yaw); // poseが手に入ったらmap座標系での角度を入力
+    rotate_vector(msg->twist.linear.x, msg->twist.linear.y, current_yaw); // poseが手に入ったらmap座標系での角度を入力
     // この後にprime_velを操作すること
 
 /*処理に使う一時データ*/
-    const double omega = constrain(msg->angular.z, -angular_max_vel, angular_max_vel);
+    const double omega = constrain(msg->twist.angular.z, -angular_max_vel, angular_max_vel);
     // 並進の処理
-    const double linear_length = std::sqrt(this->prime_vel.linear.x*this->prime_vel.linear.x + this->prime_vel.linear.y*this->prime_vel.linear.y);
+    const double linear_length = std::sqrt(this->prime_vel.twist.linear.x*this->prime_vel.twist.linear.x + this->prime_vel.twist.linear.y*this->prime_vel.twist.linear.y);
     if(linear_length > linear_max_vel){
-        this->prime_vel.linear.x *= linear_length / linear_max_vel;
-        this->prime_vel.linear.y *= linear_length / linear_max_vel;
+        this->prime_vel.twist.linear.x *= linear_length / linear_max_vel;
+        this->prime_vel.twist.linear.y *= linear_length / linear_max_vel;
     }
     // 上のスカラー制限処理で問題ないが，最終的なフィルターとして置いておく
-    const double vx_p = constrain(this->prime_vel.linear.x, -linear_max_vel, linear_max_vel);
-    const double vy_p = constrain(this->prime_vel.linear.y, -linear_max_vel, linear_max_vel);
+    const double vx_p = constrain(this->prime_vel.twist.linear.x, -linear_max_vel, linear_max_vel);
+    const double vy_p = constrain(this->prime_vel.twist.linear.y, -linear_max_vel, linear_max_vel);
 
     std::array<double, 4> wheel_vel;
 
@@ -124,8 +124,8 @@ void ChassisDriver::rotate_vector(const double vx, const double vy, const double
     const double sin = std::sin(theta);
     const double vx_p = -vy;
     const double vy_p = vx;
-    this->prime_vel.linear.x = vx_p * cos + vy_p * sin;
-    this->prime_vel.linear.y = -vx_p * sin + vy_p * cos;
+    this->prime_vel.twist.linear.x = vx_p * cos + vy_p * sin;
+    this->prime_vel.twist.linear.y = -vx_p * sin + vy_p * cos;
 }
 
 /*CANモータ設定*/

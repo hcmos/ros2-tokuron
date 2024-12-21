@@ -45,7 +45,8 @@ namespace pose_pid
         _qos,
         std::bind(&PosePID::_subscriber_callback_selfpose, this, std::placeholders::_1));
 
-    publisher_vel = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", _qos);
+    publisher_vel = this->create_publisher<geometry_msgs::msg::TwistStamped>("cmd_vel", _qos);
+    // publisher_vel = this->create_publisher<geometry_msgs::msg::Twist>("cmd_vel", _qos);
 
     // ゲイン設定
     const auto linear_gain = get_parameter("linear_pidgain").as_double_array();
@@ -62,13 +63,14 @@ namespace pose_pid
 
   void PosePID::_publisher_callback()
   {
-    auto msg_vel = std::make_shared<geometry_msgs::msg::Twist>();
+    auto msg_vel = std::make_shared<geometry_msgs::msg::TwistStamped>();
 
     if (mode == Mode::stop)
     {
-      msg_vel->linear.x = 0.0;
-      msg_vel->linear.y = 0.0;
-      msg_vel->angular.z = 0.0;
+      msg_vel->header.stamp = this->now();
+      msg_vel->twist.linear.x = 0.0;
+      msg_vel->twist.linear.y = 0.0;
+      msg_vel->twist.angular.z = 0.0;
       publisher_vel->publish(*msg_vel);
       return;
     }
@@ -86,9 +88,10 @@ namespace pose_pid
 
     // RCLCPP_INFO(this->get_logger(), "current  x:%f  y:%f  yaw:%f", self_pose->pose.position.x, self_pose->pose.position.y, current_yaw);
 
-    msg_vel->linear.x = pid_linear_x.cycle(self_pose->pose.position.x, target->point.x) * linear_max_vel;
-    msg_vel->linear.y = pid_linear_y.cycle(self_pose->pose.position.y, target->point.y) * linear_max_vel;
-    msg_vel->angular.z = pid_angular.cycle(current_yaw, target->point.z) * angular_max_vel;
+    msg_vel->header.stamp = this->now();
+    msg_vel->twist.linear.x = pid_linear_x.cycle(self_pose->pose.position.x, target->point.x) * linear_max_vel;
+    msg_vel->twist.linear.y = pid_linear_y.cycle(self_pose->pose.position.y, target->point.y) * linear_max_vel;
+    msg_vel->twist.angular.z = pid_angular.cycle(current_yaw, target->point.z) * angular_max_vel;
 
     // 出版
     publisher_vel->publish(*msg_vel);
