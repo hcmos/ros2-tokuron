@@ -32,7 +32,7 @@ def generate_launch_description():
     # トラッキングモジュールのノードの作成
     qwiic_node = Node(
         package = 'qwiic',
-        executable = 'odom_node',
+        executable = 'pose_node',
         parameters = [config_file_path],
         output='screen'
     )

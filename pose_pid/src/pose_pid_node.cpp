@@ -84,7 +84,7 @@ namespace pose_pid
         2.0 * (self_pose->pose.orientation.w * self_pose->pose.orientation.z),
         1.0 - 2.0 * (self_pose->pose.orientation.z * self_pose->pose.orientation.z));
 
-    RCLCPP_INFO(this->get_logger(), "current  x:%f  y:%f  yaw:%f", self_pose->pose.position.x, self_pose->pose.position.y, current_yaw);
+    // RCLCPP_INFO(this->get_logger(), "current  x:%f  y:%f  yaw:%f", self_pose->pose.position.x, self_pose->pose.position.y, current_yaw);
 
     msg_vel->linear.x = pid_linear_x.cycle(self_pose->pose.position.x, target->point.x) * linear_max_vel;
     msg_vel->linear.y = pid_linear_y.cycle(self_pose->pose.position.y, target->point.y) * linear_max_vel;
@@ -107,14 +107,14 @@ namespace pose_pid
   void PosePID::_subscriber_callback_selfpose(const geometry_msgs::msg::PoseStamped::SharedPtr msg)
   {
     self_pose = msg;
-  }
-  void PosePID::reset()
-  {
-    target = nullptr;
+}
+void PosePID::reset(){
+    // target = nullptr;
     pid_linear_x.reset();
     pid_linear_y.reset();
     pid_angular.reset();
-  }
+    RCLCPP_INFO(this->get_logger(), "初期化");
+}
 
   /*基幹入力*/
   void PosePID::_subscriber_callback_stop(const std_msgs::msg::Empty::SharedPtr msg)

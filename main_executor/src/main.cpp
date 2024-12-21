@@ -6,6 +6,8 @@
 #include "cybergear_interface/cybergear_interface_node.hpp"
 #include "landmark_localization/landmark_localization.hpp"
 #include "pose_pid/pose_pid_node.hpp"
+#include "ball_detector/ball_detector.hpp"
+#include "impact_point_estimator/impact_point_estimator.hpp"
 
 int main(int argc, char * argv[]){
     rclcpp::init(argc,argv);
@@ -19,15 +21,19 @@ int main(int argc, char * argv[]){
     auto chassis_driver_node = std::make_shared<chassis_driver::ChassisDriver>(nodes_option);
     auto controller_node = std::make_shared<controller::Controller>(nodes_option);
     auto cybergear_interface_node = std::make_shared<cybergear_interface::CybergearInterface>(nodes_option);
-    auto landmark_localization_node = std::make_shared<landmark_localization::LandmarkLocalization>(nodes_option);
+    // auto landmark_localization_node = std::make_shared<landmark_localization::LandmarkLocalization>(nodes_option);
     auto pose_pid_node = std::make_shared<pose_pid::PosePID>(nodes_option);
+    auto ball_detector_node = std::make_shared<ball_detector::BallDetector>(nodes_option);
+    auto impact_point_estimator_node = std::make_shared<impact_point_estimator::ImpactPointEstimator>(nodes_option);
 
     exec.add_node(socketcan_node);
     exec.add_node(controller_node);
     exec.add_node(chassis_driver_node);
     exec.add_node(cybergear_interface_node);
     exec.add_node(pose_pid_node);
-    exec.add_node(landmark_localization_node);
+    // exec.add_node(landmark_localization_node);
+    exec.add_node(ball_detector_node);
+    exec.add_node(impact_point_estimator_node);
 
     exec.spin();
     rclcpp::shutdown();

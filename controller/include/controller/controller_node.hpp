@@ -24,15 +24,19 @@ public:
 
 private:
     rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr _subscription_joy;
+    rclcpp::Subscription<socketcan_interface_msg::msg::SocketcanIF>::SharedPtr _subscription_ems;
 
     void _subscriber_callback_joy(const sensor_msgs::msg::Joy::SharedPtr msg);
+    void _subscriber_callback_ems(const socketcan_interface_msg::msg::SocketcanIF::SharedPtr msg);
 
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr publisher_vel;
     rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr publisher_stop;
     rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr publisher_restart;
-    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr publisher_emergency;
+    // rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr publisher_emergency;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr publisher_autonomous;
     rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr publisher_cybergear;
+    rclcpp::Publisher<std_msgs::msg::Empty>::SharedPtr publisher_cybergear_reset;
+    rclcpp::Publisher<socketcan_interface_msg::msg::SocketcanIF>::SharedPtr publisher_can;
 
     rclcpp::QoS _qos = rclcpp::QoS(10);
 
@@ -47,6 +51,7 @@ private:
     utils::UpEdge upedge_auto;
     utils::UpEdge upedge_restart;
     utils::UpEdge upedge_cybergear;
+    utils::UpEdge upedge_cybergear_reset;
 
     enum class Axes{
         L_x,

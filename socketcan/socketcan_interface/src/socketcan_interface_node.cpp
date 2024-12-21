@@ -123,7 +123,7 @@ void SocketcanInterface::_publisher_callback() {
 
         if (known_id_rx_publisher.find(frame.can_id) == known_id_rx_publisher.end()) {
             known_id_rx_publisher[frame.can_id] = this->create_publisher<socketcan_interface_msg::msg::SocketcanIF>(
-                    std::string("can_rx_" + (boost::format("%x") % frame.can_id).str()), _qos);
+                    std::string("can_rx_" + (boost::format("%03X") % frame.can_id).str()), _qos);
         }
         known_id_rx_publisher[frame.can_id]->publish(*msg);
     }

@@ -47,12 +47,6 @@ pos_kp(dtor(get_parameter("pos_kp").as_double()) * gear_rate)
         [this] { _publisher_callback(); }
     );
 
-    driver.init_motor(cybergear_defs::MODE::POSITION);
-    driver.set_limit_speed(static_cast<float>(limit_speed));
-    driver.enable_motor();
-
-    driver.set_position_kp(static_cast<float>(pos_kp));
-
     RCLCPP_INFO(this->get_logger(), "init cybergear interface node");
     RCLCPP_INFO(this->get_logger(), "マスターID:0x%03X  ターゲットID:0x%03X", get_parameter("master_id").as_int(), get_parameter("target_id").as_int());
     RCLCPP_INFO(this->get_logger(), "逆転:%d  最大位置:%.3lf  最小位置:%.3lf", is_reversed, pos_limit_max, pos_limit_min);
@@ -98,6 +92,11 @@ void CybergearInterface::_subscriber_callback_stop(const std_msgs::msg::Empty::S
 }
 void CybergearInterface::_subscriber_callback_restart(const std_msgs::msg::Empty::SharedPtr msg){
     mode = Mode::stay;
+    driver.init_motor(cybergear_defs::MODE::POSITION);
+    driver.set_limit_speed(static_cast<float>(limit_speed));
+    driver.enable_motor();
+
+    driver.set_position_kp(static_cast<float>(pos_kp));
 }
 
 }  // namespace cybergear_interface
