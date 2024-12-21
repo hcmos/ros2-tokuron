@@ -6,6 +6,7 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/pose2_d.hpp>
 #include <geometry_msgs/msg/pose_stamped.hpp>
+#include <geometry_msgs/msg/point_stamped.hpp>
 
 #include "utilities/position_pid.hpp"
 
@@ -24,14 +25,15 @@ private:
     rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _subscription_stop;
     rclcpp::Subscription<std_msgs::msg::Empty>::SharedPtr _subscription_restart;
     rclcpp::Subscription<std_msgs::msg::Bool>::SharedPtr _subscription_autonomous;
-    rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr _subscription_target;
+    rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr _subscription_target;
+    // rclcpp::Subscription<geometry_msgs::msg::Pose2D>::SharedPtr _subscription_target;
     rclcpp::Subscription<geometry_msgs::msg::PoseStamped>::SharedPtr _subscription_selfpose;
     rclcpp::TimerBase::SharedPtr _pub_timer;
 
     void _subscriber_callback_stop(const std_msgs::msg::Empty::SharedPtr msg);
     void _subscriber_callback_restart(const std_msgs::msg::Empty::SharedPtr msg);
     void _subscriber_callback_autonomous(const std_msgs::msg::Bool::SharedPtr msg);
-    void _subscriber_callback_target(const geometry_msgs::msg::Pose2D::SharedPtr msg);
+    void _subscriber_callback_target(const geometry_msgs::msg::PointStamped::SharedPtr msg);
     void _subscriber_callback_selfpose(const geometry_msgs::msg::PoseStamped::SharedPtr msg);
     void _publisher_callback();
 
@@ -53,7 +55,7 @@ private:
 
     //変数
     bool is_autonomous = false;
-    std::shared_ptr<geometry_msgs::msg::Pose2D> target;
+    std::shared_ptr<geometry_msgs::msg::PointStamped> target;
     std::shared_ptr<geometry_msgs::msg::PoseStamped> self_pose;
 
     // 動作モード
