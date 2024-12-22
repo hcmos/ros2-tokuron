@@ -87,7 +87,6 @@ namespace pose_pid
         1.0 - 2.0 * (self_pose->pose.orientation.z * self_pose->pose.orientation.z));
 
     // RCLCPP_INFO(this->get_logger(), "current  x:%f  y:%f  yaw:%f", self_pose->pose.position.x, self_pose->pose.position.y, current_yaw);
-
     msg_vel->header.stamp = this->now();
     msg_vel->twist.linear.x = pid_linear_x.cycle(self_pose->pose.position.x, target->point.x) * linear_max_vel;
     msg_vel->twist.linear.y = pid_linear_y.cycle(self_pose->pose.position.y, target->point.y) * linear_max_vel;
@@ -99,6 +98,7 @@ namespace pose_pid
 
   void PosePID::_subscriber_callback_target(const geometry_msgs::msg::PointStamped::SharedPtr msg)
   {
+    RCLCPP_INFO(this->get_logger(), "time: %lf", this->now().seconds());
     reset();
     std::shared_ptr<geometry_msgs::msg::PointStamped> target_ = msg;
     target_->point.x = constrain(target_->point.x, allowed_area.at(0), allowed_area.at(1));

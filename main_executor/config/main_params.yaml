@@ -40,10 +40,10 @@ chassis_driver_node:
 pose_pid_node:
   ros__parameters:
     interval_ms : 10
-    linear_pidgain : [3.0, 0.01, 0.0]
+    linear_pidgain : [2.0, 0.01, 0.0]
     # linear_pidgain : [1.1, 0.01, 0.0]
     angular_pidgain : [1.0, 0.01, 0.0]
-    allowed_area : [-0.25, 1.0, -0.8, 0.8]   #[x下限，x上限，y下限，y上限]
+    allowed_area : [-1.0, 1.0, -0.8, 0.8]   #[x下限，x上限，y下限，y上限]
 
 qwiic_pose_node:
   ros__parameters:
@@ -112,15 +112,16 @@ impact_point_estimator:
   ros__parameters:
     motor_pos: 0.0
     reroad: -3.0
-    offset_time: -0.1
+    offset_time: -0.04
     curve_points_num: 2
     standby_pose_x: 0.0
     standby_pose_y: 0.0
-    lidar_to_target_x: -0.2
-    lidar_to_target_y: -0.02
-    lidar_to_target_z: 0.5
+    lidar_to_target_x: 0.2
+    lidar_to_target_y: 0.02
+    lidar_to_target_z: 0.7
     V_min: 1.0
     V_max: 7.0
     expected_direction: [-1.0, 0.0, 0.0]
     theta_max_deg: 60.0
     first_goal_x: 0.0
+    standby_delay: 1.0
