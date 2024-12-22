@@ -112,7 +112,7 @@ impact_point_estimator:
   ros__parameters:
     motor_pos: 0.0
     reroad: -3.0
-    offset_time: -0.04
+    offset_time: -0.05
     curve_points_num: 2
     standby_pose_x: 0.0
     standby_pose_y: 0.0
@@ -124,4 +124,4 @@ impact_point_estimator:
     expected_direction: [-1.0, 0.0, 0.0]
     theta_max_deg: 60.0
     first_goal_x: 0.0
-    standby_delay: 1.0
+    standby_delay: 2.0
