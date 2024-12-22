@@ -64,6 +64,17 @@ void Controller::_subscriber_callback_joy(const sensor_msgs::msg::Joy::SharedPtr
         msg_autonomous->data = is_autonomous = !is_autonomous;
         publisher_autonomous->publish(*msg_autonomous);
         RCLCPP_INFO(this->get_logger(), "自動フラグ : %d", msg_autonomous->data);
+
+        // CAN送信
+        auto msg_can = std::make_shared<socketcan_interface_msg::msg::SocketcanIF>();
+        msg_can->candlc = 0;
+        if(!is_autonomous){
+            msg_can->canid = 0x501;
+        }
+        else{
+            msg_can->canid = 0x502;
+        }
+        publisher_can->publish(*msg_can);
     }
     // リスタート
     if(upedge_restart(msg->buttons[static_cast<int>(Buttons::Menu)])){
